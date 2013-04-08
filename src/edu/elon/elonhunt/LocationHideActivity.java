@@ -18,14 +18,14 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.PowerManager;
-import android.os.PowerManager.WakeLock;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.JsonReader;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 
@@ -38,7 +38,8 @@ public class LocationHideActivity extends Activity {
 
 	private LocationManager locManager;
 	
-	private WakeLock wakeLock;
+	//test
+	private Button testButton;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,9 +59,19 @@ public class LocationHideActivity extends Activity {
 
 			}
 		});
-		PowerManager powerManager = (PowerManager) getSystemService(Context.POWER_SERVICE);
-		//wakeLock = powerManager.new WakeLock(PowerManager.FULL_WAKE_LOCK, "tag");
 		
+		testButton = (Button) findViewById(R.id.testbutton);
+		
+		testButton.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				switchActivities();
+
+			}
+		});
+	
+	getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);	
 	}
 
 	@Override
@@ -75,7 +86,6 @@ public class LocationHideActivity extends Activity {
 	protected void onPause() {
 		super.onPause();
 		locManager.removeUpdates(locationListener);
-		this.wakeLock.release();
 	}
 	
 
@@ -109,12 +119,24 @@ public class LocationHideActivity extends Activity {
 		}
 
 	};
+	
+
 
 	private void hide() {
 		// getting player name array to see if the name already exists
 		String namesURL = "http://170.224.161.119:9081/elonhunt/getplayers";
 		new GetNames().execute(namesURL);
+		switchActivities();
 
+	}
+	
+	private void switchActivities() {
+		Intent intent = new Intent(this, SearchLocationActivity.class);
+		intent.putExtra("playername",playerText.getText().toString());
+		intent.putExtra("latitude", currentLatitude);
+		intent.putExtra("longitude", currentLongitude);
+		startActivity(intent);
+		finish();
 	}
 
 	@SuppressLint("NewApi")
