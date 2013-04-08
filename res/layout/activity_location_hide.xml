@@ -19,7 +19,7 @@
 
     <EditText
         android:id="@+id/playerText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:ems="10" >
 
@@ -29,7 +29,8 @@
     <Button
         android:id="@+id/button"
         android:layout_width="match_parent"
-        android:layout_height="320dp"
+        android:layout_height="fill_parent"
+        android:layout_marginTop="20dp"
         android:text="Button" />
 
 </LinearLayout>
